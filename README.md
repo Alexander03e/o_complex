@@ -16,8 +16,6 @@
 1. git clone https://github.com/Alexander03e/o_complex.git - склонировать данный репо
 2. npm install - установка зависимостей
 3. npm run dev - запуск в режиме разработки
-  finish
 либо :
 3. npm run build
 4. npm start
-  finish
