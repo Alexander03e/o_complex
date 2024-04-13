@@ -1,6 +1,6 @@
-import { HttpInstanceFactory } from "@/utils/HttpInstanceFactory";
+import { AxiosInstance } from "axios";
 import { fetchData } from "./baseInstance";
-import axios, { AxiosInstance } from "axios";
+import { HttpInstanceFactory } from "@/utils/HttpInstanceFactory";
 
 export interface IProductPages {
   page: number;
@@ -16,11 +16,21 @@ export interface IProducts {
   description: string;
   price: number;
 }
+interface IOrderItem {
+  id: string;
+  quantity: string;
+}
+interface IOrderData {
+  phone: string;
+  cart: Array<IOrderItem>;
+}
 
 export class ProductApi {
   private fetchInstance;
+  private httpInstance: AxiosInstance;
   private static instance: ProductApi | null = null;
   private constructor() {
+    this.httpInstance = HttpInstanceFactory.getInstance();
     this.fetchInstance = fetchData;
   }
 
@@ -30,10 +40,29 @@ export class ProductApi {
     return this.instance;
   }
 
-  async getProducts(page = 1, pageSize = 20): Promise<IProductPages> {
-    const data = await this.fetchInstance(
-      `/products?page=${page}&page_size=${pageSize}`
-    );
-    return data;
+  async getProducts(
+    page = 1,
+    pageSize = 20
+  ): Promise<IProductPages | undefined> {
+    try {
+      const data = await this.fetchInstance(
+        `/products?page=${page}&page_size=${pageSize}`
+      );
+      return data;
+    } catch (e) {
+      console.log("products error");
+    }
+  }
+
+  async publicOrder(data: IOrderData) {
+    try {
+      await this.httpInstance.post("/order", {
+        ...data,
+      });
+      return { success: 1 };
+    } catch (e) {
+      console.log("public order error");
+      return { success: 0 };
+    }
   }
 }

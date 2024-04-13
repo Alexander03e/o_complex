@@ -6,6 +6,11 @@ import ReactInputMask from "react-input-mask";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Popup } from "./Popup";
+import { ProductApi } from "@/api/product.api";
+
+const ALERT_DELAY = 1500;
+const ORDER_DELAY = 10000;
+const BLOCK_DELAY = 2500;
 
 const Alert = ({
   title,
@@ -17,13 +22,15 @@ const Alert = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose(false);
-    }, 1500);
+    }, ALERT_DELAY);
     return () => clearTimeout(timer);
   }, [onClose]);
   return <Popup title={title} />;
 };
 
 export const Cart = () => {
+  const productApi = ProductApi.getInstance();
+
   const [showPopup, setShowPopup] = useState(false);
   const [blockSend, setBlockSend] = useState(false);
   const [popupTitle, setPopupTitle] = useState("");
@@ -43,35 +50,52 @@ export const Cart = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    if (!products.length) {
-      setPopupTitle("Список товаров пуст!");
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    const { success } = await productApi.publicOrder({
+      phone: String(number.replace(/\D/g, "")),
+      cart: products.map((item) => {
+        return {
+          id: String(item.id),
+          quantity: String(item.count),
+        };
+      }),
+    });
+    if (success == 1) {
+      if (!products.length) {
+        setPopupTitle("Список товаров пуст!");
+        setShowPopup(true);
+        return;
+      }
+      if (popupTimer) {
+        return;
+      }
+      if (blockSend) {
+        setPopupTitle(
+          `Подождите ${
+            ORDER_DELAY / 1000
+          } секунд перед отправкой следующей заявки!`
+        );
+        setPopupTimer(true);
+        setTimeout(() => {
+          setPopupTimer(false);
+        }, BLOCK_DELAY);
+        setShowPopup(true);
+        return;
+      }
       setShowPopup(true);
-      return;
-    }
-    if (popupTimer) {
-      return;
-    }
-    if (blockSend) {
-      setPopupTitle("Подождите 15 секунд перед отправкой следующей заявки!");
+      setBlockSend(true);
+      setPopupTitle("Заявка отправлена!");
       setPopupTimer(true);
       setTimeout(() => {
         setPopupTimer(false);
-      }, 3000);
-      setShowPopup(true);
+      }, BLOCK_DELAY);
+      setTimeout(() => {
+        setBlockSend(false);
+      }, ORDER_DELAY);
       return;
     }
     setShowPopup(true);
-    setBlockSend(true);
-    setPopupTitle("Заявка отправлена!");
-    setPopupTimer(true);
-    setTimeout(() => {
-      setPopupTimer(false);
-    }, 3000);
-    setTimeout(() => {
-      setBlockSend(false);
-    }, 15000);
-    console.log(data);
+    setPopupTitle("Извините, произошла ошибка при отправке");
   };
   const numberChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(setNumber(e.target.value));

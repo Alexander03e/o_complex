@@ -7,7 +7,7 @@ export const ProductListContainer = async () => {
   const data = await productsApi.getProducts();
   return (
     <div className={styles.wrapper}>
-      <ProductList initialProducts={data.products} />
+      <ProductList initialProducts={data?.products} />
     </div>
   );
 };

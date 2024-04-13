@@ -7,7 +7,7 @@ export const ReviewList = async () => {
   const data = await reviewApi.getReviews();
   return (
     <div className={styles.wrapper}>
-      {data.map((item: IReview) => (
+      {data?.map((item: IReview) => (
         <ReviewCard key={item.id} {...item} />
       ))}
     </div>

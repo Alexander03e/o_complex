@@ -12,7 +12,7 @@ import { setProducts } from "@/store/slices/products/products.slice";
 export const ProductList = ({
   initialProducts,
 }: {
-  initialProducts: IProducts[];
+  initialProducts?: IProducts[];
 }) => {
   const [currentPage, setCurrentPage] = useState(2);
   const dispatch = useAppDispatch();
@@ -21,31 +21,41 @@ export const ProductList = ({
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
+  const TOTAL_PRODUCTS = meta.total ?? 228;
   useEffect(() => {
     dispatch(setProducts(initialProducts));
   }, [initialProducts, dispatch]);
 
   useEffect(() => {
-    if (inView && meta.pagination.page * 20 < meta.total) {
+    if (inView && meta.pagination.page * 20 < TOTAL_PRODUCTS) {
       dispatch(getProductsByPagination({ page: currentPage, pageSize: 20 }));
       setCurrentPage((prev) => prev + 1);
     }
-  }, [inView, dispatch, currentPage, meta.total, meta.pagination.page]);
+  }, [
+    inView,
+    dispatch,
+    currentPage,
+    meta.total,
+    meta.pagination.page,
+    TOTAL_PRODUCTS,
+  ]);
 
   return (
-    <div className={styles.wrapper}>
-      {initialProducts.map((item) => (
-        <ProductCard key={item.id} {...item} />
-      ))}
-      {status == Status.LOADING &&
-        Array(20)
-          .fill(null)
-          .map((_, i) => <SkeletonCard key={i} />)}
-      {products.map((item) => (
-        <ProductCard key={item.id} {...item} />
-      ))}
+    <>
+      <div className={styles.wrapper}>
+        {initialProducts?.map((item) => (
+          <ProductCard key={item.id} {...item} />
+        ))}
+        {status == Status.LOADING &&
+          Array(20)
+            .fill(null)
+            .map((_, i) => <SkeletonCard key={i} />)}
+        {products.map((item) => (
+          <ProductCard key={item.id} {...item} />
+        ))}
+        {status != Status.LOADING && <div ref={ref} />}
+      </div>
       {status == Status.ERROR && <p>Ошибка загрузки</p>}
-      {status != Status.LOADING && <div ref={ref} />}
-    </div>
+    </>
   );
 };

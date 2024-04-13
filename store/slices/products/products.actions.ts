@@ -12,7 +12,6 @@ export const getProductsByPagination = createAsyncThunk(
   ) => {
     try {
       const response = await productsApi.getProducts(page, pageSize);
-      console.log("test");
       return thunkAPI.fulfillWithValue(response);
     } catch (e) {
       const error = (e as AxiosError<any>).response?.data;

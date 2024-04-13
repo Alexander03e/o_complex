@@ -20,8 +20,12 @@ export class ReviewApi {
     return this.instance;
   }
 
-  async getReviews(): Promise<IReview[]> {
-    const { data } = await this.httpInstance.get("/reviews");
-    return data;
+  async getReviews(): Promise<IReview[] | undefined> {
+    try {
+      const { data } = await this.httpInstance.get("/reviews");
+      return data;
+    } catch (e) {
+      console.log("reviews error");
+    }
   }
 }
