@@ -1,0 +1,9 @@
+.wrapper {
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 100px;
+  gap: 34px;
+  margin-bottom: 240px;
+}
