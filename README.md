@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Тестовое задание для o-complex, выполнил Егоров Александр
 
-## Getting Started
+! Сделал все задания из ноушена
 
-First, run the development server:
+Использовал: Next, Typescript, Redux Toolkit, Redux Persist, css-modules
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Что добавил и некоторые подробности:
+1. Поменял немного визуал корзины, сделал более понятный ux
+2. Реализовал антиспам систему для попапов и отправки пост запросов с заявкой
+3. Реализовал ssr начальный рендеринг 1 страницы продуктов и отзывов, динамическую пагинацию с прелоудером
+4. Кэширование корзины через redux persist
+5. Реализовал защиту от xss атаки и добавил скролл для названий, если они будут длиннее
+6. Реализовал страницу notfound, отслеживание ошибок, прелоудер 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Как запустить:
+1. git clone https://github.com/Alexander03e/o_complex.git - склонировать данный репо
+2. npm install - установка зависимостей
+3. npm run dev - запуск в режиме разработки
+  finish
+либо :
+3. npm run build
+4. npm start
+  finish
